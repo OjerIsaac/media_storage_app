@@ -7,8 +7,7 @@ export enum MediaStatus {
 }
 
 @Entity({ name: 'media' })
-export class MediaStorage extends BaseTable {
-
+export class Media extends BaseTable {
   @Column({ type: 'varchar', nullable: false })
   type: string;
 
@@ -21,6 +20,11 @@ export class MediaStorage extends BaseTable {
   @Column({ type: 'varchar', nullable: false })
   url: string;
 
-  @Column({ type: 'enum', nullable: false, default: 'Active' })
+  @Column({
+    type: 'enum',
+    enum: MediaStatus,
+    default: MediaStatus.Active,
+    nullable: false,
+  })
   status: MediaStatus;
 }

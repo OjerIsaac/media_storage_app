@@ -1,4 +1,4 @@
-import { PageMetaDtoParameters } from '../interfaces/pagination.interface';
+import { PageMetaDtoParameters } from './pagination.interface';
 
 export class PaginationMetadataDto {
   readonly page: number;

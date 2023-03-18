@@ -1,36 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { MediaRepository } from './media.repository';
-import { CreateMediaDto } from './dto/create-media.dto';
-import { ErrorHelper } from '../../lib/utils';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CreateMediaDto } from './dto/media.dto';
+import { Media } from './entities';
 
 @Injectable()
 export class MediaService {
   constructor(
-    private mediaRepo: MediaRepository,
+    @InjectRepository(Media)
+        private mediaRepository: Repository<Media>
   ) {}
 
-  async create(data: CreateMediaDto) {
+  async createNewMedia(data: CreateMediaDto) {
+    // const { name } = data;
 
-    const { name } = data;
+    // const existingLogistic = await this.logisticsRepo.getExisting(name, email, phone);
+    // if (existingLogistic) {
+    //   ErrorHelper.ConflictException(
+    //     'Logistics Partner already exists with specified name, email or phone'
+    //   );
+    // }
 
-    const existingMedia = await this.mediaRepo.getExisting(name);
-    if (existingMedia) {
-      ErrorHelper.ConflictException(
-        'Media already exists with specified name'
-      );
-    }
-
-    const createMedia = this.mediaRepo.create({
+    const createdMedia = this.mediaRepository.create({
       type: data.type,
-      name,
+      name: data.name,
       description: data.description,
       url: data.url,
       status: data.status
     });
 
-    const media = await this.mediaRepo.save(createMedia);
+    const media = await this.mediaRepository.save(createdMedia);
 
-    return media;
+    return createdMedia;
   }
 
 }
