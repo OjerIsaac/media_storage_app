@@ -5,7 +5,12 @@ import { Media } from './entities';
 import { ErrorHelper } from '../../utils';
 import * as fs from 'fs';
 import * as path from 'path';
-import { PaginationDto, PaginationMetadataDto, PaginationResultDto } from '../../queries';
+import {
+  PaginationDto,
+  PaginationMetadataDto,
+  PaginationResultDto,
+} from '../../queries';
+import { UpdateMediaDto } from './dto/update-media.dto';
 
 @Injectable()
 export class MediaService {
@@ -64,13 +69,12 @@ export class MediaService {
   }
 
   async getMedia(paginationDto: PaginationDto) {
-
     const [media, count] = await this.mediaRepository.findAndCount({
       skip: paginationDto.skip,
       take: paginationDto.limit,
     });
 
-    const result = media.map(x => ({
+    const result = media.map((x) => ({
       id: x.id,
       type: x.type,
       name: x.name,
@@ -88,9 +92,8 @@ export class MediaService {
   }
 
   async getSingleMedia(mediaId: string) {
-
     const media = await this.mediaRepository.findOne({
-      where: { id: mediaId }
+      where: { id: mediaId },
     });
 
     if (!media) {
@@ -113,11 +116,11 @@ export class MediaService {
         description: ILike(`%${query}%`),
       },
     });
-  
+
     if (!media || media.length === 0) {
       ErrorHelper.NotFoundException('Media not found');
     }
-  
+
     return media.map((z) => ({
       id: z.id,
       type: z.type,
@@ -126,5 +129,24 @@ export class MediaService {
       url: z.url,
       status: z.status,
     }));
+  }
+
+  async updateMedia(mediaId: string, data: UpdateMediaDto) {
+    const media = await this.mediaRepository.findOne({
+      where: { id: mediaId },
+    });
+    if (!media) {
+      ErrorHelper.NotFoundException('Media not found');
+    }
+    media.status = data.status;
+    await this.mediaRepository.save(media);
+    return {
+      id: media.id,
+      type: media.type,
+      name: media.name,
+      description: media.description,
+      url: media.url,
+      status: media.status,
+    };
   }
 }
