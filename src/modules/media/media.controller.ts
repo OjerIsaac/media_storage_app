@@ -45,9 +45,7 @@ export class MediaController {
   }
 
   @Get()
-  async getMedia(
-    @Query() paginationDto: PaginationDto
-  ) {
+  async getMedia(@Query() paginationDto: PaginationDto) {
     const data = await this.mediaService.getMedia(paginationDto);
 
     return HttpResponse.success({
@@ -57,10 +55,21 @@ export class MediaController {
   }
 
   @Get(':id')
-  async getSingleMedia(
-    @Param('mediaId') mediaId: string
-  ) {
+  async getSingleMedia(@Param('mediaId') mediaId: string) {
     const data = await this.mediaService.getSingleMedia(mediaId);
+
+    return HttpResponse.success({
+      data,
+      message: 'Media fetched successfully',
+    });
+  }
+
+  @Get('search')
+  async searchMedia(
+    @Query('query') query: string,
+  ) {
+    const data = await this.mediaService.searchMedia(query);
+    console.log(data)
 
     return HttpResponse.success({
       data,

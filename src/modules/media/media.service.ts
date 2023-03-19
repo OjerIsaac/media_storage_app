@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, ILike } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Media } from './entities';
 import { ErrorHelper } from '../../utils';
@@ -105,5 +105,26 @@ export class MediaService {
       url: media.url,
       status: media.status,
     };
+  }
+
+  async searchMedia(query: string) {
+    const media = await this.mediaRepository.find({
+      where: {
+        description: ILike(`%${query}%`),
+      },
+    });
+  
+    if (!media || media.length === 0) {
+      ErrorHelper.NotFoundException('Media not found');
+    }
+  
+    return media.map((z) => ({
+      id: z.id,
+      type: z.type,
+      name: z.name,
+      description: z.description,
+      url: z.url,
+      status: z.status,
+    }));
   }
 }
