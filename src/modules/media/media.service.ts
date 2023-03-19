@@ -86,4 +86,24 @@ export class MediaService {
 
     return new PaginationResultDto(result, pageMetaDto);
   }
+
+  async getSingleMedia(mediaId: string) {
+
+    const media = await this.mediaRepository.findOne({
+      where: { id: mediaId }
+    });
+
+    if (!media) {
+      ErrorHelper.NotFoundException('Media not found');
+    }
+
+    return {
+      id: media.id,
+      type: media.type,
+      name: media.name,
+      description: media.description,
+      url: media.url,
+      status: media.status,
+    };
+  }
 }

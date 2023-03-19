@@ -5,6 +5,7 @@ import {
   Patch,
   Post,
   Get,
+  Param,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -48,6 +49,18 @@ export class MediaController {
     @Query() paginationDto: PaginationDto
   ) {
     const data = await this.mediaService.getMedia(paginationDto);
+
+    return HttpResponse.success({
+      data,
+      message: 'Media fetched successfully',
+    });
+  }
+
+  @Get(':id')
+  async getSingleMedia(
+    @Param('mediaId') mediaId: string
+  ) {
+    const data = await this.mediaService.getSingleMedia(mediaId);
 
     return HttpResponse.success({
       data,
