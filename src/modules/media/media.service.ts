@@ -12,6 +12,7 @@ import {
 } from '../../queries';
 import { UpdateMediaDto } from './dto/update-media.dto';
 
+//TODO: Handle exceptions
 @Injectable()
 export class MediaService {
   constructor(
@@ -148,5 +149,20 @@ export class MediaService {
       url: media.url,
       status: media.status,
     };
+  }
+
+  async deleteMedia(mediaId: string) {
+    const media = await this.mediaRepository.findOne({
+      where: { id: mediaId },
+    });
+  
+    if (!media) {
+      ErrorHelper.NotFoundException('Media not found');
+    }
+  
+    media.deletedAt = new Date();
+    await this.mediaRepository.save(media);
+  
+    return media;
   }
 }

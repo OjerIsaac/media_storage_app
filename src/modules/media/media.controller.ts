@@ -6,6 +6,7 @@ import {
   Post,
   Get,
   Param,
+  Delete,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import File from '@nestjs/common';
 import { PaginationDto } from '../../queries';
 import { UpdateMediaDto } from './dto/update-media.dto';
 
+//TODO: Handle exceptions
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
@@ -82,11 +84,21 @@ export class MediaController {
     @Body() body: UpdateMediaDto,
   ) {
     const data = await this.mediaService.updateMedia(mediaId, body);
-    console.log(data);
 
     return HttpResponse.success({
       data,
       message: 'Media updated successfully',
+    });
+  }
+
+  @Delete(':id')
+  async deleteMedia(@Param('id') mediaId: string) {
+    console.log(mediaId)
+    await this.mediaService.deleteMedia(mediaId);
+
+    return HttpResponse.success({
+      data: [],
+      message: 'Media deleted successfully',
     });
   }
 }
