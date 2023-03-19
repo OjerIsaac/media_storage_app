@@ -26,3 +26,23 @@ This is a simple CRUD API for media storage powered by Nodejs, Nestjs and TS
 - `npm run start:dev`
 
 ## Documentation.
+
+### Create media
+<p align="center">
+  <img src="create.jpg" width="100%" alt="create media" title="image sample">
+</p>
+
+### Fetch single media
+<p align="center">
+  <img src="getSingle.jpg" width="100%" alt="fetch single media" title="image sample">
+</p>
+
+### Fetch all media
+<p align="center">
+  <img src="getall.jpg" width="100%" alt="fetch all media" title="image sample">
+</p>
+
+### Update media
+<p align="center">
+  <img src="update.jpg" width="100%" alt="update media" title="image sample">
+</p>
