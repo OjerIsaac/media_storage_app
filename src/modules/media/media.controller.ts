@@ -4,6 +4,7 @@ import {
   Controller,
   Patch,
   Post,
+  Get,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -12,6 +13,7 @@ import { CreateMediaDto } from './dto/media.dto';
 import { HttpResponse } from '../../utils';
 import { FileInterceptor } from '@nestjs/platform-express';
 import File from '@nestjs/common';
+import { PaginationDto } from '../../queries';
 
 @Controller('media')
 export class MediaController {
@@ -38,6 +40,18 @@ export class MediaController {
     return HttpResponse.success({
       message: 'Media created successfully',
       data: createMedia,
+    });
+  }
+
+  @Get()
+  async getMedia(
+    @Query() paginationDto: PaginationDto
+  ) {
+    const data = await this.mediaService.getMedia(paginationDto);
+
+    return HttpResponse.success({
+      data,
+      message: 'Media fetched successfully',
     });
   }
 }

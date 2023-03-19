@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Media } from './entities';
-import { ErrorHelper } from 'src/utils';
+import { ErrorHelper } from '../../utils';
 import * as fs from 'fs';
 import * as path from 'path';
+import { PaginationDto, PaginationMetadataDto, PaginationResultDto } from '../../queries';
 
 @Injectable()
 export class MediaService {
@@ -60,5 +61,29 @@ export class MediaService {
       path: uploadPath,
       type,
     };
+  }
+
+  async getMedia(paginationDto: PaginationDto) {
+
+    const [media, count] = await this.mediaRepository.findAndCount({
+      skip: paginationDto.skip,
+      take: paginationDto.limit,
+    });
+
+    const result = media.map(x => ({
+      id: x.id,
+      type: x.type,
+      name: x.name,
+      description: x.description,
+      url: x.url,
+      status: x.status,
+    }));
+
+    const pageMetaDto = new PaginationMetadataDto({
+      itemCount: count,
+      pageOptionsDto: paginationDto,
+    });
+
+    return new PaginationResultDto(result, pageMetaDto);
   }
 }
