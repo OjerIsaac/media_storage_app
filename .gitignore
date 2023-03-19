@@ -113,3 +113,6 @@ dump.rdb
 .Ds_Store
 
 start.sh
+
+uploads/
+trash/

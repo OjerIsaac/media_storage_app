@@ -1,11 +1,7 @@
-import { IsEmail, IsIn, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { MediaStatus } from '../entities'; 
+import { IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { MediaStatus } from '../entities';
 
 export class CreateMediaDto {
-  @IsString()
-  @IsNotEmpty()
-  type: string;
-
   @IsString()
   @IsNotEmpty()
   name: string;
@@ -13,10 +9,6 @@ export class CreateMediaDto {
   @IsString()
   @IsNotEmpty()
   description: string;
-
-  @IsString()
-  @IsNotEmpty()
-  url: string;
 
   @IsIn(['Active', 'Inactive'])
   @IsNotEmpty()

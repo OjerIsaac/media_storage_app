@@ -1,16 +1,43 @@
-import { Body, Query, Controller, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Query,
+  Controller,
+  Patch,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MediaService } from './media.service';
 import { CreateMediaDto } from './dto/media.dto';
 import { HttpResponse } from '../../utils';
+import { FileInterceptor } from '@nestjs/platform-express';
+import File from '@nestjs/common';
 
 @Controller('media')
 export class MediaController {
   constructor(private readonly mediaService: MediaService) {}
 
   @Post()
-  async createNewMedia(@Body() CreateMediaDto: CreateMediaDto) {
-    const data = await this.mediaService.createNewMedia(CreateMediaDto);
+  @UseInterceptors(FileInterceptor('file'))
+  async createNewMedia(
+    @UploadedFile() file: File,
+    @Body() CreateMediaDto: CreateMediaDto,
+  ) {
+    const fileInfo = await this.mediaService.savedMediaFile(file);
+    if (!fileInfo) {
+    }
 
-    // return HttpResponse.success({ data, message: 'Media created successfully' });
+    const data = {
+      ...CreateMediaDto,
+      url: fileInfo.path,
+      type: fileInfo.type,
+    };
+
+    const createMedia = await this.mediaService.createNewMedia(data);
+
+    return HttpResponse.success({
+      message: 'Media created successfully',
+      data: createMedia,
+    });
   }
 }
